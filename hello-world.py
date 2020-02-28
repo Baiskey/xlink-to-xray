@@ -1,7 +1,7 @@
 from xml.etree import ElementTree
-import os
 import csv
 
+translation = {39: None}
 
 def print_xml():
     row_list = ["Summary", "Assignee", "Reporter", "Issue Type", "Description", "Test Type", "Manual Test Steps"]
@@ -17,19 +17,19 @@ def print_xml():
             testcase_name = testcase.attrib['name']
             print("Name: " + testcase_name)
             for step in testcase.iter('step'):
-                final_action = step.find('actions').text
-                expected_result = step.find('expectedresults').text
+                final_action = step.find('actions').text.replace('"', '')
+                expected_result = step.find('expectedresults').text.replace('"', '')
                 print("Action:" + final_action)
                 print("Expected result: " + expected_result)
-                steps_array.append(prepare_execution_step(index, final_action, "", expected_result))
+                steps_array.append(prepare_execution_step(index, final_action, None, expected_result))
                 index += 1
-            writer.writerow([testcase_name, "183503", "183503", "10000", testcase_name, "Manual", str(steps_array)])
+            writer.writerow([testcase_name, "183503", "183503", "13900", testcase_name, "Manual", str(steps_array).translate(translation)])
             # print(steps_array)
             print("\n")
 
 
 def prepare_execution_step(index, step, required_data, result):
-    template = '""index"": {}, ""step"": ""{}"", ""data"": ""{}"", ""result"": ""{}""'.format(index, step,
+    template = '"index": {}, "step": "{}", "data": "{}", "result": "{}"'.format(index, step,
                                                                                               required_data, result)
     return '{' + template + '}'
 

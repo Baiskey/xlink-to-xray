@@ -1,0 +1,3 @@
+Summary; Assignee; Reporter; Issue Type; Description; Test Type; Manual Test Steps
+"Test issue 1"; admin; admin; 10000; "This is a Test issue"; "Manual"; "[ { ""index"": 0, ""step"": ""Step 1"", ""data"": ""input Data 1"", ""result"": ""Excepted result 1"" }, { ""index"": 1, ""step"": ""Step 2"", ""data"": ""input Data 2"", ""result"": ""Excepted result 2"" } ]"
+"Test issue 2"; admin; admin; 10000; "This is a Test issue"; "Manual"; "[ { ""index"": 0, ""step"": ""Step 1"", ""data"": ""input Data 1"", ""result"": ""Excepted result 1"" } ]"

@@ -1,30 +1,28 @@
 from xml.etree import ElementTree
 import csv
 
-translation = {39: None}
-
 def print_xml():
-    row_list = ["Summary", "Assignee", "Reporter", "Issue Type", "Description", "Test Type", "Manual Test Steps"]
-    tree = ElementTree.parse("test.xml")
+    row_list = ["TCID","Test Summary", "Test Priority", "Step", "Data", "Result"]
+    tree = ElementTree.parse("plik.xml")
     root = tree.getroot()
 
-    with open('output_test.csv', 'w', newline='') as file:
+    with open('output_test.csv', 'w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file, delimiter=";")
         writer.writerow(row_list)
+        # TCID, Test Summary, Test Priority, Step Data, Result
+        index = 1
         for testcase in root.iter('testcase'):
             steps_array = []
-            index = 0
             testcase_name = testcase.attrib['name']
             print("Name: " + testcase_name)
+            writer.writerow([index, testcase_name, "High", "", "", ""])
             for step in testcase.iter('step'):
                 final_action = step.find('actions').text.replace('"', '')
                 expected_result = step.find('expectedresults').text.replace('"', '')
                 print("Action:" + final_action)
                 print("Expected result: " + expected_result)
-                steps_array.append(prepare_execution_step(index, final_action, None, expected_result))
-                index += 1
-            writer.writerow([testcase_name, "183503", "183503", "13900", testcase_name, "Manual", str(steps_array).translate(translation)])
-            # print(steps_array)
+                writer.writerow([index, "", "", final_action, "", expected_result])
+            index += 1
             print("\n")
 
 

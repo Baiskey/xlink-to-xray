@@ -2,7 +2,7 @@ from xml.etree import ElementTree
 import csv
 
 def print_xml():
-    row_list = ["TCID","Test Summary", "Test Priority", "Step", "Data", "Result"]
+    row_list = ["TCID","Test Summary", "Precondition", "Test Priority", "Step", "Data", "Result"]
     tree = ElementTree.parse("test.xml")
     root = tree.getroot()
 
@@ -14,19 +14,23 @@ def print_xml():
         for testcase in root.iter('testcase'):
             first_step = True
             testcase_name = testcase.attrib['name']
+            test_precondition = ""
             print("Name: " + testcase_name)
+            for precondition in testcase.iter('preconditions'):
+                test_precondition += precondition.text.replace('"', '')
+                print("Test Precondition: " + test_precondition)
             if len(list(testcase.iter('step'))) == 0:
-                writer.writerow([index, testcase_name, "High", "", "", ""])
+                writer.writerow([index, testcase_name, test_precondition, "High", "", "", ""])
             for step in testcase.iter('step'):
                 final_action = step.find('actions').text.replace('"', '')
                 expected_result = step.find('expectedresults').text.replace('"', '')
                 print("Action:" + final_action)
                 print("Expected result: " + expected_result)
                 if first_step is True:
-                    writer.writerow([index, testcase_name, "High", final_action, "", expected_result])
+                    writer.writerow([index, testcase_name, test_precondition, "High", final_action, "", expected_result])
                     first_step = False
                 else:
-                    writer.writerow([index, "", "", final_action, "", expected_result])
+                    writer.writerow([index, "", "", "", final_action, "", expected_result])
             index += 1
             print("\n")
 

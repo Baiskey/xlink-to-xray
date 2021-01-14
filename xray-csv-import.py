@@ -1,9 +1,10 @@
 from xml.etree import ElementTree
 import csv
 
-def print_xml():
-    row_list = ["TCID","Test Summary", "Precondition", "Test Priority", "Step", "Data", "Result"]
-    tree = ElementTree.parse("test.xml")
+
+def parse_xml_to_csv():
+    row_list = ["TCID", "Test Summary", "Precondition", "Test Priority", "Step", "Data", "Result"]
+    tree = ElementTree.parse("xxxx.xml")
     root = tree.getroot()
 
     with open('output_test.csv', 'w', newline='', encoding='utf-8') as file:
@@ -17,7 +18,8 @@ def print_xml():
             test_precondition = ""
             print("Name: " + testcase_name)
             for precondition in testcase.iter('preconditions'):
-                test_precondition += precondition.text.replace('"', '')
+                if precondition.text is not None:
+                    test_precondition += precondition.text.replace('"', '')
                 print("Test Precondition: " + test_precondition)
             if len(list(testcase.iter('step'))) == 0:
                 writer.writerow([index, testcase_name, test_precondition, "High", "", "", ""])
@@ -27,7 +29,8 @@ def print_xml():
                 print("Action:" + final_action)
                 print("Expected result: " + expected_result)
                 if first_step is True:
-                    writer.writerow([index, testcase_name, test_precondition, "High", final_action, "", expected_result])
+                    writer.writerow(
+                        [index, testcase_name, test_precondition, "High", final_action, "", expected_result])
                     first_step = False
                 else:
                     writer.writerow([index, "", "", "", final_action, "", expected_result])
@@ -37,10 +40,10 @@ def print_xml():
 
 def prepare_execution_step(index, step, required_data, result):
     template = '"index": {}, "step": "{}", "data": "{}", "result": "{}"'.format(index, step,
-                                                                                              required_data, result)
+                                                                                required_data, result)
     return '{' + template + '}'
 
 
 if __name__ == "__main__":
     # print(prepare_execution_step(0, "Hello World", "nothing", "expected result"))
-    print_xml()
+    parse_xml_to_csv()
